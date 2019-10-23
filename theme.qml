@@ -1,3 +1,7 @@
+// Secretary theme for Pegasus
+// Copyright (C) 2019  Mátyás Mustoha
+
+
 import QtQuick 2.6
 import SortFilterProxyModel 0.2
 
