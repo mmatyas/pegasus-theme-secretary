@@ -159,7 +159,7 @@ FocusScope {
         sorters: [
             RoleSorter {
                 id: sorter
-                roleName: "title"
+                roleName: "sortTitle"
 
                 readonly property bool isAscending: sortOrder == Qt.AscendingOrder
 
@@ -202,9 +202,9 @@ FocusScope {
             ListHeaderCell {
                 baseText: "Title"
                 width: parent.width * 0.35
-                isActive: sorter.roleName === "title"
+                isActive: sorter.roleName === "sortTitle"
                 isAscending: sorter.isAscending
-                onClicked: sorter.changeTo("title")
+                onClicked: sorter.changeTo("sortTitle")
             }
             ListHeaderCell {
                 baseText: "Developer/Publisher"
