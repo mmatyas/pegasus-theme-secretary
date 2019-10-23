@@ -271,8 +271,9 @@ FocusScope {
                     width: parent.width * 0.1
                 }
                 ListRowCell {
-                    text: modelData.players >= 2 ? "\uC6C3".repeat(modelData.players) : ""
+                    text: "\uC6C3".repeat(modelData.players)
                     width: parent.width * 0.1
+                    opacity: modelData.players > 1 ? 1.0 : 0.4
                 }
                 ListRowCell {
                     text: modelData.favorite ? "\u2764" : ""
