@@ -1,12 +1,9 @@
 import QtQuick 2.6
-import QtQuick.Window 2.2
 import SortFilterProxyModel 0.2
 
 
 FocusScope {
     readonly property int baseFontSize: height / 720.0 * 13
-
-    Component.onCompleted: console.log(baseFontSize)
 
     function uniqueGameValues(fieldName) {
         const set = new Set();
@@ -24,7 +21,7 @@ FocusScope {
         height: open ? openHeight : closedHeight
 
         property bool open: true
-        readonly property int closedHeight: baseFontSize * 2 + panelGrid.rowSpacing
+        readonly property int closedHeight: panelGrid.children[0].height + panelGrid.rowSpacing
         readonly property int openHeight: panelGrid.height
         clip: true
 
@@ -39,7 +36,6 @@ FocusScope {
             }
         }
 
-
         Row {
             anchors.fill: parent
 
@@ -51,7 +47,7 @@ FocusScope {
                     panelToggleAnim.enabled = true;
                     panel.open = !panel.open;
                 }
-                padding: panelGrid.topPadding + baseFontSize * 0.25
+                padding: panelGrid.topPadding + baseFontSize * 0.4
             }
 
             Grid {
@@ -60,12 +56,12 @@ FocusScope {
                 columns: 2
 
                 readonly property double firstColumnW: 0.20 * width
-                readonly property double secondColumnW: width - firstColumnW
+                readonly property double secondColumnW: width - firstColumnW - topPadding
                 rowSpacing: baseFontSize
                 topPadding: rowSpacing / 2
                 bottomPadding: topPadding
 
-                PanelLabel { text: "Name contains:" }
+                PanelLabel { text: "Name contains:"; height: font.pixelSize * 2.5 }
                 PanelInputBase {
                     id: inName
                     placeholderText: "(any)"
@@ -96,10 +92,10 @@ FocusScope {
                     initialModel: uniqueGameValues('tagList')
                 }
 
-                PanelLabel { text: "Release year:" }
+                PanelLabel { text: "Release year:"; height: font.pixelSize * 2.5 }
                 PanelMinMax { id: inYear; acceptedMin: 1900; acceptedMax: 2100 }
 
-                PanelLabel { text: "Players:" }
+                PanelLabel { text: "Players:"; height: font.pixelSize * 2.5 }
                 PanelMinMax { id: inPlayers; acceptedMin: 1; acceptedMax: 100 }
             }
         }
@@ -159,12 +155,55 @@ FocusScope {
     }
 
 
+    Rectangle {
+        id: tableHead
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: panel.bottom
+        height: baseFontSize * 3
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: "#ddd" }
+            GradientStop { position: 1.0; color: "#aaa" }
+        }
+
+        Row {
+            anchors.fill: parent
+
+            ListRowCell {
+                text: "#"
+                width: parent.width * 0.05
+            }
+            ListRowCell {
+                text: "Title"
+                width: parent.width * 0.35
+            }
+            ListRowCell {
+                text: "Developer/Publisher"
+                width: parent.width * 0.35
+            }
+            ListRowCell {
+                text: "Release"
+                width: parent.width * 0.1
+            }
+            ListRowCell {
+                text: "Players"
+                width: parent.width * 0.1
+            }
+            ListRowCell {
+                text: "Fav."
+                width: parent.width * 0.05
+                horizontalAlignment: Text.AlignHCenter
+            }
+        }
+    }
+
+
     ListView {
         id: gameList
 
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.top: panel.bottom
+        anchors.top: tableHead.bottom
         anchors.bottom: parent.bottom
         visible: height > 0
         clip: true
@@ -226,5 +265,18 @@ FocusScope {
             anchors.fill: parent
             color: "#ededed"
         }
+    }
+
+    Item {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: panel.bottom
+        anchors.bottom: parent.bottom
+
+        ListRowCellSep { anchors.leftMargin: parent.width * 0.05 }
+        ListRowCellSep { anchors.leftMargin: parent.width * 0.40 }
+        ListRowCellSep { anchors.leftMargin: parent.width * 0.75 }
+        ListRowCellSep { anchors.leftMargin: parent.width * 0.85 }
+        ListRowCellSep { anchors.leftMargin: parent.width * 0.95 }
     }
 }
