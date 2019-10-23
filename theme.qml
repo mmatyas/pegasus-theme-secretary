@@ -152,6 +152,28 @@ FocusScope {
                 maximumValue: inPlayers.max
             }
         ]
+        sorters: [
+            RoleSorter {
+                id: sorter
+                roleName: "title"
+
+                readonly property bool isAscending: sortOrder == Qt.AscendingOrder
+
+                function changeTo(fieldName) {
+                    sorter.enabled = true;
+
+                    if (fieldName === roleName) {
+                        sortOrder = isAscending
+                            ? Qt.DescendingOrder
+                            : Qt.AscendingOrder;
+                    }
+                    else {
+                        roleName = fieldName;
+                        sortOrder = Qt.AscendingOrder;
+                    }
+                }
+            }
+        ]
     }
 
 
@@ -169,30 +191,44 @@ FocusScope {
         Row {
             anchors.fill: parent
 
-            ListRowCell {
-                text: "#"
+            ListHeaderCell {
+                baseText: "#"
                 width: parent.width * 0.05
             }
-            ListRowCell {
-                text: "Title"
+            ListHeaderCell {
+                baseText: "Title"
                 width: parent.width * 0.35
+                isActive: sorter.roleName === "title"
+                isAscending: sorter.isAscending
+                onClicked: sorter.changeTo("title")
             }
-            ListRowCell {
-                text: "Developer/Publisher"
+            ListHeaderCell {
+                baseText: "Developer/Publisher"
                 width: parent.width * 0.35
+                isActive: sorter.roleName === "developer"
+                isAscending: sorter.isAscending
+                onClicked: sorter.changeTo("developer")
             }
-            ListRowCell {
-                text: "Release"
+            ListHeaderCell {
+                baseText: "Release"
                 width: parent.width * 0.1
+                isActive: sorter.roleName === "release"
+                isAscending: sorter.isAscending
+                onClicked: sorter.changeTo("release")
             }
-            ListRowCell {
-                text: "Players"
+            ListHeaderCell {
+                baseText: "Players"
                 width: parent.width * 0.1
+                isActive: sorter.roleName === "players"
+                isAscending: sorter.isAscending
+                onClicked: sorter.changeTo("players")
             }
-            ListRowCell {
-                text: "Fav."
+            ListHeaderCell {
+                baseText: "Fav."
                 width: parent.width * 0.05
-                horizontalAlignment: Text.AlignHCenter
+                isActive: sorter.roleName === "favorite"
+                isAscending: sorter.isAscending
+                onClicked: sorter.changeTo("favorite")
             }
         }
     }
