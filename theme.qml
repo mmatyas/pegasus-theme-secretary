@@ -13,6 +13,11 @@ FocusScope {
     readonly property var allowedPubs: inPub.model.filter(e => e.selected).map(e => e.name)
     readonly property var allowedGenres: inGenre.model.filter(e => e.selected).map(e => e.name)
     readonly property var allowedTags: inTag.model.filter(e => e.selected).map(e => e.name)
+    readonly property var allowedCollGames: {
+        const allowedCollNames = inColl.model.filter(e => e.selected).map(e => e.name);
+        const allowedColls = api.collections.toVarArray().filter(e => allowedCollNames.includes(e.name));
+        return [].concat( ...allowedColls.map(coll => coll.games.toVarArray()) );
+    }
 
     function uniqueGameValues(fieldName) {
         const set = new Set();
@@ -101,6 +106,12 @@ FocusScope {
                     initialModel: uniqueGameValues('tagList')
                 }
 
+                PanelLabel { text: "Collections:" }
+                PanelMultiPick {
+                    id: inColl
+                    initialModel: api.collections.toVarArray().map(coll => coll.name)
+                }
+
                 PanelLabel { text: "Release year:"; height: font.pixelSize * 2.5 }
                 PanelMinMax { id: inYear; acceptedMin: 1900; acceptedMax: 2100 }
 
@@ -135,6 +146,10 @@ FocusScope {
             ExpressionFilter {
                 enabled: allowedTags.length
                 expression: tagList.some(v => allowedTags.includes(v))
+            },
+            ExpressionFilter {
+                enabled: allowedCollGames.length
+                expression: allowedCollGames.includes(api.allGames.get(index))
             },
             ExpressionFilter {
                 expression: releaseYear == 0 || (inYear.min <= releaseYear && releaseYear <= inYear.max)
