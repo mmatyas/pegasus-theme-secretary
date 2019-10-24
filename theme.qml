@@ -9,6 +9,11 @@ import SortFilterProxyModel 0.2
 FocusScope {
     readonly property int baseFontSize: height / 720.0 * 13
 
+    readonly property var allowedDevs: inDev.model.filter(e => e.selected).map(e => e.name)
+    readonly property var allowedPubs: inPub.model.filter(e => e.selected).map(e => e.name)
+    readonly property var allowedGenres: inGenre.model.filter(e => e.selected).map(e => e.name)
+    readonly property var allowedTags: inTag.model.filter(e => e.selected).map(e => e.name)
+
     function uniqueGameValues(fieldName) {
         const set = new Set();
         api.allGames.toVarArray().forEach(game => {
@@ -116,36 +121,20 @@ FocusScope {
                 caseSensitivity: Qt.CaseInsensitive
             },
             ExpressionFilter {
-                expression: {
-                    const allowed = inDev.model.filter(e => e.selected).map(e => e.name);
-                    return allowed.length
-                        ? developerList.some(v => allowed.includes(v))
-                        : true;
-                }
+                enabled: allowedDevs.length
+                expression: developerList.some(v => allowedDevs.includes(v))
             },
             ExpressionFilter {
-                expression: {
-                    const allowed = inPub.model.filter(e => e.selected).map(e => e.name);
-                    return allowed.length
-                        ? publisherList.some(v => allowed.includes(v))
-                        : true;
-                }
+                enabled: allowedPubs.length
+                expression: publisherList.some(v => allowedPubs.includes(v))
             },
             ExpressionFilter {
-                expression: {
-                    const allowed = inGenre.model.filter(e => e.selected).map(e => e.name);
-                    return allowed.length
-                        ? genreList.some(v => allowed.includes(v))
-                        : true;
-                }
+                enabled: allowedGenres.length
+                expression: genreList.some(v => allowedGenres.includes(v))
             },
             ExpressionFilter {
-                expression: {
-                    const allowed = inTag.model.filter(e => e.selected).map(e => e.name);
-                    return allowed.length
-                        ? tagList.some(v => allowed.includes(v))
-                        : true;
-                }
+                enabled: allowedTags.length
+                expression: tagList.some(v => allowedTags.includes(v))
             },
             ExpressionFilter {
                 expression: releaseYear == 0 || (inYear.min <= releaseYear && releaseYear <= inYear.max)
